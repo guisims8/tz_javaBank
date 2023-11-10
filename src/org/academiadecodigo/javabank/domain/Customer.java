@@ -13,7 +13,7 @@ import java.util.Map;
 public class Customer {
 
     private AccountManager accountManager;
-    private Map<Integer, Account> accounts = new HashMap<>();
+    protected Map<Integer, Account> accounts = new HashMap<>();
 
     /**
      * Sets the account manager

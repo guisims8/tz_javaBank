@@ -64,8 +64,7 @@ public class AccountManager {
     public void withdraw(int id, double amount) {
 
         Account account = accountMap.get(id);
-
-        if (!account.canWithdraw()) {
+        if (!account.canWithdraw(amount)) {
             return;
         }
 

@@ -91,7 +91,7 @@ public abstract class Account {
      *
      * @return {@code true} if withdraw can be done
      */
-    public boolean canWithdraw() {
+    public boolean canWithdraw(double amout) {
         return true;
     }
 }

@@ -9,8 +9,7 @@ import java.util.Set;
  * The bank entity
  */
 public class Bank {
-
-    private AccountManager accountManager;
+    public AccountManager accountManager;
     private Set<Customer> customers = new HashSet<>();
 
     /**
