@@ -20,6 +20,8 @@ public class App {
         bank.addCustomer(c2);
         bank.addCustomer(c3);
 
+        System.out.println("mudanças");
+
         BankApplication bankApplication = new BankApplication(bank);
         bankApplication.start();
     }
