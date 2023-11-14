@@ -5,8 +5,51 @@ import org.academiadecodigo.javabank.model.account.CheckingAccount;
 import org.academiadecodigo.javabank.model.account.SavingsAccount;
 import org.academiadecodigo.javabank.services.AccountService;
 import org.academiadecodigo.javabank.services.AccountServiceImpl;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Map;
+
+import static org.junit.Assert.assertFalse;
 
 public class AccountServiceTest {
+    private AccountServiceImpl accountService = new AccountServiceImpl();
+    private Account ac;
+    private Account as;
+    //private Map<Integer, Account> accountMap;
+
+    @Before
+    public void setUp() {
+        ac = Mockito.mock(Account.class);
+        System.out.println("acid" + ac.getId());
+        as = Mockito.mock(Account.class);
+        //  this.accountMap = Mockito.mock(Map.class);
+    }
+
+    @Test
+    public void add() {
+        accountService.add(ac);
+        accountService.add(as);
+        assertEquals(1, (int) accountService.getNextId());
+        assertEquals(2, (int) accountService.getNextId());
+
+    }
+
+    @Test
+    public void deposit() {
+        accountService.add(ac);
+        accountService.deposit(0, 10);
+        assertEquals(10, (int) ac.getBalance());
+
+    }
 
     public boolean test() {
 

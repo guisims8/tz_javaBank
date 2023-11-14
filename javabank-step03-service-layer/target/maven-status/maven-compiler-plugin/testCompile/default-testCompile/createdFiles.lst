@@ -1,0 +1,6 @@
+org/academiadecodigo/javabank/Test.class
+org/academiadecodigo/javabank/CustomerServiceTest.class
+org/academiadecodigo/javabank/AuthServiceTest.class
+org/academiadecodigo/javabank/AccountServiceTest.class
+org/academiadecodigo/javabank/CheckingAccountTest.class
+org/academiadecodigo/javabank/SavingsAccountTest.class

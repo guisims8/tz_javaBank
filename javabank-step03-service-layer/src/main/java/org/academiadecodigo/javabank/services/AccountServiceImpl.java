@@ -19,7 +19,7 @@ public class AccountServiceImpl implements AccountService {
      *
      * @return the next id
      */
-    private Integer getNextId() {
+    public Integer getNextId() {
         return accountMap.isEmpty() ? 1 : Collections.max(accountMap.keySet()) + 1;
     }
 
