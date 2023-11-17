@@ -1,4 +1,11 @@
-*.iml
-out
+.DS_Store
+*.class
 .idea
+*.ipr
+*.iml
+target
 build
+out
+.project
+node_modules
+bin
