@@ -6,6 +6,7 @@ import org.academiadecodigo.javabank.controller.transaction.DepositController;
 import org.academiadecodigo.javabank.controller.transaction.WithdrawalController;
 import org.academiadecodigo.javabank.factories.AccountFactory;
 import org.academiadecodigo.javabank.model.Customer;
+import org.academiadecodigo.javabank.persistence.daos.jdbc.JDBCCustomerDAO;
 import org.academiadecodigo.javabank.services.AccountService;
 import org.academiadecodigo.javabank.services.CustomerService;
 import org.academiadecodigo.javabank.services.AuthServiceImpl;
@@ -133,6 +134,9 @@ public class Bootstrap {
         controllerMap.put(UserOptions.WITHDRAW.getOption(), withdrawalController);
 
         mainController.setControllerMap(controllerMap);
+
+        // setup jdbc DAO
+
 
         return loginController;
     }

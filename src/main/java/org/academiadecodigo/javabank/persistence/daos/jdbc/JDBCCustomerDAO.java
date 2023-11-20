@@ -12,12 +12,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class JDBCCustomerDAO implements CustomerDAO {
+
+
     ConnectionManager connectionManager;
     private AccountService accountService;
 
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Override
     public List findAll() {
@@ -48,7 +59,7 @@ public class JDBCCustomerDAO implements CustomerDAO {
             e.printStackTrace();
         }
 
-        return customers;
+        return new LinkedList(customers.values());
     }
 
     private Customer buildCustomer(ResultSet resultSet) throws SQLException {
@@ -64,15 +75,54 @@ public class JDBCCustomerDAO implements CustomerDAO {
         return customer;
     }
 
+
     @Override
-    public Model findById(Integer id) {
-        return null;
+    public Customer findById(Integer id) {
+        Customer customer = null;
+
+        try {
+            String query = "SELECT customer.id AS cid, first_name, last_name, phone, email, account.id AS aid " +
+                    "FROM customer " +
+                    "LEFT JOIN account " +
+                    "ON customer.id = account.customer_id " +
+                    "WHERE customer.id = ?";
+
+            PreparedStatement statement = connectionManager.getConnection().prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                if (customer == null) {
+                    customer = buildCustomer(resultSet);
+                }
+
+                int accountId = resultSet.getInt("aid");
+                Account account = accountService.get(accountId);
+
+                if (account == null) {
+                    break;
+                }
+
+                customer.addAccount(account);
+            }
+
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customer;
+
     }
 
     @Override
-    public Model saveOrUpdate(Model model) {
+    public Customer saveOrUpdate(Customer model) {
         return null;
     }
+
+
 
     @Override
     public void delete(Integer id) {

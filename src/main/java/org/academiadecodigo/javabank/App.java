@@ -3,6 +3,7 @@ package org.academiadecodigo.javabank;
 import org.academiadecodigo.javabank.controller.Controller;
 import org.academiadecodigo.javabank.factories.AccountFactory;
 import org.academiadecodigo.javabank.persistence.ConnectionManager;
+import org.academiadecodigo.javabank.persistence.daos.jdbc.JDBCCustomerDAO;
 import org.academiadecodigo.javabank.services.jdbc.JdbcAccountService;
 import org.academiadecodigo.javabank.services.jdbc.JdbcCustomerService;
 import org.academiadecodigo.javabank.services.AuthServiceImpl;
@@ -23,6 +24,15 @@ public class App {
         JdbcAccountService accountService = new JdbcAccountService(connectionManager, accountFactory);
         JdbcCustomerService customerService = new JdbcCustomerService(connectionManager);
         customerService.setAccountService(accountService);
+
+        JDBCCustomerDAO jdbcCustomerDAO = new JDBCCustomerDAO();
+        jdbcCustomerDAO.setConnectionManager(connectionManager);
+        jdbcCustomerDAO.setAccountService(accountService);
+        customerService.setJdbcCustomerDAO(jdbcCustomerDAO);
+
+        // testes
+        System.out.println(jdbcCustomerDAO.findAll());
+
 
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.setAuthService(new AuthServiceImpl());
