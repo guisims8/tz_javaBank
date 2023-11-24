@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <util:constant id="stdin" static-field="java.lang.System.in"/>
+    <util:constant id="stdout" static-field="java.lang.System.out"/>
+
+    <bean id="prompt" class="org.academiadecodigo.bootcamp.Prompt">
+        <constructor-arg name="input" ref="stdin"/>
+        <constructor-arg name="output" ref="stdout"/>
+    </bean>
+
+
+    <bean id="customerDao" class="org.academiadecodigo.javabank.persistence.dao.jpa.JpaCustomerDao">
+        <constructor-arg name="sm" ref="sm"/>
+        <!-- talvez precise de um modeltype -->
+    </bean>
+
+    <bean id="transactionManager" class="org.academiadecodigo.javabank.persistence.jpa.JpaTransactionManager">
+        <constructor-arg name="sm" ref="sm"/>
+    </bean>
+
+    <bean id="customerService" class="org.academiadecodigo.javabank.services.CustomerServiceImpl">
+        <property name="customerDao" ref="customerDao"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="authService" class="org.academiadecodigo.javabank.services.AuthServiceImpl">
+        <property name="customerService" ref="customerService"/>
+    </bean>
+
+    <bean id="loginView" class="org.academiadecodigo.javabank.view.LoginView">
+        <property name="loginController" ref="loginController"/>
+        <property name="prompt" ref="prompt"/>
+    </bean>
+
+    <bean id="loginController" class="org.academiadecodigo.javabank.controller.LoginController">
+        <property name="authService" ref="authService"/>
+        <property name="view" ref="loginView"/>
+        <!--next controller
+             view -->
+    </bean>
+
+    <bean id="mainController" class="org.academiadecodigo.javabank.controller.MainController">
+        <property name="authService" ref="authService"/>
+        <property name="view" ref="mainView"/>
+        <property name="controllerMap">
+            <map>
+                <entry key="" value="BalanceController.class"/>
+                <entry key="" value="2.75"/>
+                <entry key="" value="3.99"/>
+            </map>
+        </property>
+    </bean>
+
+
+
+    <bean id="mainView" class="org.academiadecodigo.javabank.view.MainView">
+
+    </bean>
+
+</beans>
+
