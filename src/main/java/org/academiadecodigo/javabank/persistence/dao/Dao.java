@@ -1,9 +1,14 @@
-package org.academiadecodigo.javabank.persistence.daos;
+package org.academiadecodigo.javabank.persistence.dao;
+
 
 import org.academiadecodigo.javabank.model.Model;
 
 import java.util.List;
 
+/**
+ * Base interface for data access objects, provides an abstraction over the persistence layer to access data
+ * @param <T> the model type
+ */
 public interface Dao<T extends Model> {
 
     /**

@@ -1,9 +1,13 @@
-package org.academiadecodigo.javabank.persistence.daos;
+package org.academiadecodigo.javabank.persistence.dao;
+
 
 import org.academiadecodigo.javabank.model.Customer;
 
 import java.util.List;
 
+/**
+ * Common interface for customer data access objects
+ */
 public interface CustomerDao extends Dao<Customer> {
 
     /**

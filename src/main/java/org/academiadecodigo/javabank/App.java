@@ -1,53 +1,54 @@
 package org.academiadecodigo.javabank;
 
 import org.academiadecodigo.javabank.controller.Controller;
-import org.academiadecodigo.javabank.persistence.jdbc.JDBCSessionManager;
-import org.academiadecodigo.javabank.persistence.daos.jdbc.JDBCAccountDao;
-import org.academiadecodigo.javabank.persistence.daos.jdbc.JDBCCustomerDao;
-import org.academiadecodigo.javabank.persistence.jdbc.JDBCTransactionManager;
+import org.academiadecodigo.javabank.persistence.JpaBootstrap;
+import org.academiadecodigo.javabank.persistence.TransactionManager;
+import org.academiadecodigo.javabank.persistence.dao.jpa.JpaAccountDao;
+import org.academiadecodigo.javabank.persistence.dao.jpa.JpaCustomerDao;
+import org.academiadecodigo.javabank.persistence.jpa.JpaSessionManager;
+import org.academiadecodigo.javabank.persistence.jpa.JpaTransactionManager;
 import org.academiadecodigo.javabank.services.AccountServiceImpl;
-import org.academiadecodigo.javabank.services.CustomerServiceImpl;
 import org.academiadecodigo.javabank.services.AuthServiceImpl;
+import org.academiadecodigo.javabank.services.CustomerServiceImpl;
+
+import javax.persistence.EntityManagerFactory;
 
 public class App {
 
     public static void main(String[] args) {
 
+        JpaBootstrap jpa = new JpaBootstrap();
+        EntityManagerFactory emf = jpa.start();
+
+        JpaSessionManager sm = new JpaSessionManager(emf);
+        TransactionManager tx = new JpaTransactionManager(sm);
+
         App app = new App();
-        app.bootStrap();
+        app.bootStrap(tx, sm);
+
+        jpa.stop();
+
     }
 
-    private void bootStrap() {
-
-        JDBCSessionManager JDBCSessionManager = new JDBCSessionManager();
-        JDBCTransactionManager transactionManager = new JDBCTransactionManager();
-        transactionManager.setConnectionManager(JDBCSessionManager);
-        JDBCAccountDao JDBCAccountDao = new JDBCAccountDao();
-        JDBCCustomerDao JDBCCustomerDao = new JDBCCustomerDao();
-
-        JDBCAccountDao.setConnectionManager(JDBCSessionManager);
-        JDBCCustomerDao.setAccountDAO(JDBCAccountDao);
-        JDBCCustomerDao.setConnectionManager(JDBCSessionManager);
+    private void bootStrap(TransactionManager tx, JpaSessionManager sm) {
 
         AccountServiceImpl accountService = new AccountServiceImpl();
+        accountService.setAccountDao(new JpaAccountDao(sm));
+        accountService.setTransactionManager(tx);
+
         CustomerServiceImpl customerService = new CustomerServiceImpl();
-
-        customerService.setCustomerDAO(JDBCCustomerDao);
-        customerService.setTm(transactionManager);
-
-        accountService.setAccountDAO(JDBCAccountDao);
-        accountService.setTm(transactionManager);
+        customerService.setCustomerDao(new JpaCustomerDao(sm));
+        customerService.setTransactionManager(tx);
 
         Bootstrap bootstrap = new Bootstrap();
+
         bootstrap.setAuthService(new AuthServiceImpl());
         bootstrap.setAccountService(accountService);
         bootstrap.setCustomerService(customerService);
+
         Controller controller = bootstrap.wireObjects();
 
         // start application
         controller.init();
-
-        JDBCSessionManager.stopSession();
-
     }
 }

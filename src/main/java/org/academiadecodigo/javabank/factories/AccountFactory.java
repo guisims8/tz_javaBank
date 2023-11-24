@@ -1,5 +1,6 @@
 package org.academiadecodigo.javabank.factories;
 
+
 import org.academiadecodigo.javabank.model.account.Account;
 import org.academiadecodigo.javabank.model.account.AccountType;
 import org.academiadecodigo.javabank.model.account.CheckingAccount;
@@ -16,7 +17,7 @@ public class AccountFactory {
      * @param accountType the account type
      * @return the new account
      */
-    public static Account createAccount(AccountType accountType) {
+    public Account createAccount(AccountType accountType) {
 
         Account newAccount;
         switch (accountType) {

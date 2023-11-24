@@ -5,10 +5,9 @@ import org.academiadecodigo.javabank.controller.*;
 import org.academiadecodigo.javabank.controller.transaction.DepositController;
 import org.academiadecodigo.javabank.controller.transaction.WithdrawalController;
 import org.academiadecodigo.javabank.factories.AccountFactory;
-import org.academiadecodigo.javabank.model.Customer;
 import org.academiadecodigo.javabank.services.AccountService;
-import org.academiadecodigo.javabank.services.CustomerService;
 import org.academiadecodigo.javabank.services.AuthServiceImpl;
+import org.academiadecodigo.javabank.services.CustomerService;
 import org.academiadecodigo.javabank.view.*;
 
 import java.util.HashMap;
@@ -49,7 +48,6 @@ public class Bootstrap {
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
     }
-
 
     /**
      * Wires the necessary object dependencies
@@ -94,6 +92,7 @@ public class Bootstrap {
         NewAccountController newAccountController = new NewAccountController();
         newAccountController.setAccountService(accountService);
         newAccountController.setAuthService(authService);
+        newAccountController.setAccountFactory(new AccountFactory());
         newAccountController.setView(newAccountView);
         newAccountView.setNewAccountController(newAccountController);
 
@@ -115,12 +114,21 @@ public class Bootstrap {
         withdrawView.setPrompt(prompt);
         withdrawView.setTransactionController(withdrawalController);
 
+        // wire recipients controller and view
+        RecipientsController recipientsController = new RecipientsController();
+        RecipientsView recipientsView = new RecipientsView();
+        recipientsView.setRecipientsController(recipientsController);
+        recipientsController.setView(recipientsView);
+        recipientsController.setAuthService(authService);
+        recipientsController.setCustomerService(customerService);
+
         // setup the controller map
         Map<Integer, Controller> controllerMap = new HashMap<>();
         controllerMap.put(UserOptions.GET_BALANCE.getOption(), balanceController);
         controllerMap.put(UserOptions.OPEN_ACCOUNT.getOption(), newAccountController);
         controllerMap.put(UserOptions.DEPOSIT.getOption(), depositController);
         controllerMap.put(UserOptions.WITHDRAW.getOption(), withdrawalController);
+        controllerMap.put(UserOptions.LIST_RECIPIENTS.getOption(), recipientsController);
 
         mainController.setControllerMap(controllerMap);
 
